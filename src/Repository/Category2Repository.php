@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Category;
+use App\Entity\Category2;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Category>
+ * @extends ServiceEntityRepository<Category2>
  *
- * @method Category|null find($id, $lockMode = null, $lockVersion = null)
- * @method Category|null findOneBy(array $criteria, array $orderBy = null)
- * @method Category[]    findAll()
- * @method Category[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Category2|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Category2|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Category2[]    findAll()
+ * @method Category2[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CategoryRepository extends ServiceEntityRepository
+class Category2Repository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Category::class);
+        parent::__construct($registry, Category2::class);
     }
 
-    public function save(Category $entity, bool $flush = false): void
+    public function save(Category2 $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Category $entity, bool $flush = false): void
+    public function remove(Category2 $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Category[] Returns an array of Category objects
+//     * @return Category2[] Returns an array of Category2 objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class CategoryRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Category
+//    public function findOneBySomeField($value): ?Category2
 //    {
 //        return $this->createQueryBuilder('c')
 //            ->andWhere('c.exampleField = :val')
