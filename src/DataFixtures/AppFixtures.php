@@ -3,6 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+use App\Entity\Post;
+use DateTime;
 use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -21,6 +23,16 @@ class AppFixtures extends Fixture
             $category->setName($faker->words(3, true));
             // On met en file d'attente la category pour qu'elle soit enregistrée en BDD
             $manager->persist($category);
+
+            for ($j=0; $j < 10; $j++) { 
+                $post = new Post;
+                $post->setTitle($faker->words(5, true))
+                    ->setContent($faker->paragraphs(4, true))
+                    ->setCreatedAt(new DateTime())
+                    ->setCategory($category)
+                    ;
+                $manager->persist($post);
+            }
         }
         // Une fois les catégories générées on flush pour exécuter toutes nos requêtes d'insertion en attente.
         $manager->flush();
