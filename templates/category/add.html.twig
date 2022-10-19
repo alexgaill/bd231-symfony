@@ -1,5 +1,11 @@
 {% extends "base.html.twig" %}
+
 {% block body %}
-    <h1>Ajouter une catégorie</h1>
-    {{ form(form) }}
+    <h1>Ajout d'une nouvelle catégorie</h1>
+
+    {# 
+    Permet d'inclure un template d'une partie répétée en lui 
+    passant des paramètres grâce au 'with'
+    #}
+    {% include "category/_form.html.twig" with {form:categoryForm} %}
 {% endblock %}

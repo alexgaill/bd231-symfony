@@ -1,4 +1,7 @@
 {% extends "base.html.twig" %}
+
 {% block body %}
-    {{ form(form) }}
+    <h1>Mettre à jour une catégorie</h1>
+
+    {% include "category/_form.html.twig" with {form:categoryForm, submitLabel:'Mettre à jour'} %}
 {% endblock %}

@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Category;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,21 +38,11 @@ class HomeController extends AbstractController{
     }
 
     #[Route("/", name:"app_home", methods:["GET"])]
-    public function home(): Response
+    public function home(ManagerRegistry $manager): Response
     {
-        $categories = [
-            [
-                'name' => "Catégorie 1"
-            ],
-            [
-                'name' => "Catégorie 2"
-            ],
-            [
-                'name' => "Catégorie 3"
-            ],
-        ];
+        
         return $this->render("home.html.twig", [
-            'categories' => $categories
+            'categories' => $manager->getRepository(Category::class)->findAll()
         ]);
     }
 }

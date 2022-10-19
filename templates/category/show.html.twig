@@ -1,15 +1,29 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-	<h1>{{ category.name }}</h1>
-
-	{% if category.posts %}
-		<ul>
-			{% for post in category.posts %}
-                <li>{{ post.title }}</li>
-            {% endfor %}
-		</ul>
-	{% else %}
-		<h2>Aucun article rattaché à la catégorie</h2>
+    <h1>{{ category.name }}</h1>
+	{% if category.picture %}
+		<img src="{{ asset('assets/img/categories/upload/' ~ category.picture) }}" alt="{{ category.name }}">
 	{% endif %}
+    <h2>Liste des articles associés</h2>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Titre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in category.posts %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td><a href="{{ path('single_post', {id: post.id}) }}">{{ post.title }}</a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">Il n'y a pas d'articles associés</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

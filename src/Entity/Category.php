@@ -28,6 +28,9 @@ class Category{
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Post::class, orphanRemoval: true)]
     private Collection $posts;
 
+    #[ORM\Column(length: 40, nullable: true)]
+    private ?string $picture = null;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -93,6 +96,18 @@ class Category{
                 $post->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

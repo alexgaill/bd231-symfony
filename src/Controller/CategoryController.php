@@ -4,17 +4,20 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Service\UploadFile;
 // use App\Entity\CategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
+    private const UPLOAD = "category_upload";
 
     public function __construct(
         private ManagerRegistry $manager
@@ -60,29 +63,38 @@ class CategoryController extends AbstractController
     {
         $category = new Category;
         // $this->createFormBuilder() permet de créer un générateur de formulaire
-        $form = $this->createFormBuilder($category)
-            // On utilise la méthode add pour ajouter des champs à notre formulaire
-            ->add('name', TextType::class, [
-                'label' => "Nom de la catégorie",
-                'attr' => [
-                    'placeholder' => "Nom de la catégorie"
-                ],
-                'row_attr' => [
-                    'class' => 'mb-3 form-floating'
-                ]
-            ])
-            ->add('button', SubmitType::class, [
-                'label' => "Ajouter"
-            ])
-            // La méthode getForm permet de récupérer le formulaire généré
-            ->getForm()
-        ;
+        // $form = $this->createFormBuilder($category)
+        //    // On utilise la méthode add pour ajouter des champs à notre formulaire
+        //     ->add('name', TextType::class, [
+        //         'label' => "Nom de la catégorie",
+        //         'attr' => [
+        //             'placeholder' => "Nom de la catégorie"
+        //         ],
+        //         'row_attr' => [
+        //             'class' => 'mb-3 form-floating'
+        //         ]
+        //     ])
+        //     ->add('button', SubmitType::class, [
+        //         'label' => "Ajouter"
+        //     ])
+        //     // La méthode getForm permet de récupérer le formulaire généré
+        //     ->getForm()
+        // ;
+        $form = $this->createForm(CategoryType::class, $category);
         // handleRequest() récupère les informations reçues du formulaire
         // et stockée dans la Request pour les associer à l'entité Category
         // passée en data du createFormBuilder
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $picture = $form->get('picture')->getData();
+            if ($picture) {
+                $resultSave = UploadFile::saveFile($picture, $this->getParameter(self::UPLOAD));
+                is_string($resultSave) ?
+                    $category->setPicture($resultSave) :
+                    $this->addFlash($resultSave['type'], $resultSave['message']);
+            }
+
             $om = $this->manager->getManager();
             $om->persist($category);
             $om->flush();
@@ -113,6 +125,17 @@ class CategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $picture = $form->get('picture')->getData();
+            if ($picture) {
+                if ($category->getPicture()) {
+                    unlink($this->getParameter(self::UPLOAD) .'/'. $category->getPicture());
+                }
+                $resultSave = UploadFile::saveFile($picture, $this->getParameter(self::UPLOAD));
+                is_string($resultSave) ?
+                    $category->setPicture($resultSave) :
+                    $this->addFlash($resultSave['type'], $resultSave['message']);
+            }
+
             $om = $this->manager->getManager();
             $om->persist($category);
             $om->flush();

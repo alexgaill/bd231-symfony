@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 class PostController extends AbstractController
 {
     private const REDIRECT = "post_app";
+    private const UPLOAD = "post_upload";
+
     private PostRepository $repository;
 
     public function __construct(
@@ -65,7 +67,7 @@ class PostController extends AbstractController
                     // Permet de déplacer l'image dans un dossier d'upload
                     // move() prend 2 paramètres: le dossier d'upload et le nom du fichier
                     $picture->move(
-                        $this->getParameter('upload_dir'),
+                        $this->getParameter(self::UPLOAD),
                         $pictureName
                     );
                     $post->setPicture($pictureName);
@@ -104,13 +106,13 @@ class PostController extends AbstractController
             if ($picture) {
                 try {
                     if ($post->getPicture()) {
-                        unlink($this->getParameter('upload_dir') .'/' . $post->getPicture());
+                        unlink($this->getParameter(self::UPLOAD) .'/' . $post->getPicture());
                     }
                     $pictureName = md5(uniqid()). '.' . $picture->guessExtension();
                     // Permet de déplacer l'image dans un dossier d'upload
                     // move() prend 2 paramètres: le dossier d'upload et le nom du fichier
                     $picture->move(
-                        $this->getParameter('upload_dir'),
+                        $this->getParameter(self::UPLOAD),
                         $pictureName
                     );
                     $post->setPicture($pictureName);
