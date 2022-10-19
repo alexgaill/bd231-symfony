@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 #[Route('/post', name:"post_", methods:['GET'])]
 class PostController extends AbstractController
@@ -37,6 +38,8 @@ class PostController extends AbstractController
     {
         $post = $this->repository->find($id);
         if (!$post) {
+            $this->addFlash('danger', "L'article que vous recherchez n'existe pas.");
+
             return $this->redirectToRoute(self::REDIRECT);
         }
 
@@ -53,8 +56,28 @@ class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // On récupère les informations de l'image sur notre formulaire
+            // Un objet UploadedFile est retourné
+            $picture = $form->get('picture')->getData();
+            if ($picture) {
+                try {
+                    $pictureName = md5(uniqid()). '.' . $picture->guessExtension();
+                    // Permet de déplacer l'image dans un dossier d'upload
+                    // move() prend 2 paramètres: le dossier d'upload et le nom du fichier
+                    $picture->move(
+                        $this->getParameter('upload_dir'),
+                        $pictureName
+                    );
+                    $post->setPicture($pictureName);
+                } catch (FileException $e) {
+                    $this->addFlash('danger', "Une erreur s'est produite lors de l'enregistrement de l'image avec le message suivant: ". $e->getMessage());
+                }
+            }
+
             $post->setCreatedAt(new DateTime());
             $this->repository->save($post, true);
+            $this->addFlash('success', "L'article a été ajouté.");
+
             return $this->redirectToRoute(self::REDIRECT);
         }
 
@@ -68,6 +91,7 @@ class PostController extends AbstractController
     {
         $post = $this->repository->find($id);
         if (!$post) {
+            $this->addFlash('danger', "L'article que vous recherchez n'existe pas.");
             return $this->redirectToRoute(self::REDIRECT);
         }
 
@@ -75,7 +99,28 @@ class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $picture = $form->get('picture')->getData();
+            if ($picture) {
+                try {
+                    if ($post->getPicture()) {
+                        unlink($this->getParameter('upload_dir') .'/' . $post->getPicture());
+                    }
+                    $pictureName = md5(uniqid()). '.' . $picture->guessExtension();
+                    // Permet de déplacer l'image dans un dossier d'upload
+                    // move() prend 2 paramètres: le dossier d'upload et le nom du fichier
+                    $picture->move(
+                        $this->getParameter('upload_dir'),
+                        $pictureName
+                    );
+                    $post->setPicture($pictureName);
+                } catch (FileException $e) {
+                    $this->addFlash('danger', "Une erreur s'est produite lors de l'enregistrement de l'image avec le message suivant: ". $e->getMessage());
+                }
+            }
+
             $this->repository->save($post, true);
+            $this->addFlash('success', "L'article a été modifié.");
             return $this->redirectToRoute(self::REDIRECT);
         }
 
@@ -90,6 +135,8 @@ class PostController extends AbstractController
         $post = $this->repository->find($id);
         if ($post) {
             $this->repository->remove($post, true);
+        } else {
+            $this->addFlash('danger', "L'article que vous recherchez n'existe pas.");
         }
         return $this->redirectToRoute(self::REDIRECT);
     }
