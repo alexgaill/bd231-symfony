@@ -8,6 +8,7 @@
 /var/
 /vendor/
 /migrations/*
+/public/assets/img/post/upload
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
