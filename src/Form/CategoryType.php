@@ -23,7 +23,8 @@ class CategoryType extends AbstractType
             ],
             'row_attr' => [
                 'class' => 'mb-3 form-floating'
-            ]
+            ],
+            'help' => "Nom de catégorie regroupant plusieurs articles. Choisissez un nom logique."
         ])
         ->add('picture', FileType::class, [
             'label' => "Image de mise en avant (.png, .jpeg)",

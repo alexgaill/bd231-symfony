@@ -1,0 +1,12 @@
+{{ form_start(form) }}
+<div class="form-floating">
+    <small class="text-secondary">{{ form_help(form.name) }}</small>
+	{{ form_label(form.name) }}
+	{{ form_widget(form.name) }}
+	<div class="form-error">
+		{{ form_errors(form.name) }}
+	</div>
+</div>
+{{form_row(form.picture)}}
+{{form_row(form.button, {label:formSubmit|default("Ajouter")})}}
+{{ form_end(form) }}
