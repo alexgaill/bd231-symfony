@@ -22,11 +22,12 @@
 	<body>
 		<header>
 			<nav class="navbar navbar-expand-lg navbar-dark bg-info">
-				<div class="container-fluid">
-                    {# 
-                        path est une fonction de twig générant le chemin vers une méthode de controller.
-                        path prend en paramètre le nom de la route.
-                     #}
+				<div
+					class="container-fluid">
+					{# 
+					                        path est une fonction de twig générant le chemin vers une méthode de controller.
+					                        path prend en paramètre le nom de la route.
+					                     #}
 					<a class="navbar-brand" href="{{ path('app_home') }}">Superblog</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
@@ -43,14 +44,21 @@
 					</div>
 				</div>
 			</nav>
+			{% for type, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="alert alert-{{type}} alert-dismissible fade show" role="alert">
+						{{message}}
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				{% endfor %}
+			{% endfor %}
 		</header>
-        {# 
-            Les block sont utilisés pour définir des points d'intégration de template sur le fichier base.
-            Vous pouvez en générant autant que vous souhaitez sur ce fichier. 
-            Mais sur les autres template on ne pourra qu'appeler ceux présents sur base.
-         #}
-        <main class="container">
-		    {% block body %}{% endblock %}
-        </main>
-	</body>
-</html>
+		{# 
+		            Les block sont utilisés pour définir des points d'intégration de template sur le fichier base.
+		            Vous pouvez en générant autant que vous souhaitez sur ce fichier. 
+		            Mais sur les autres template on ne pourra qu'appeler ceux présents sur base.
+		         #}
+		<main class="container"> {% block body %}{% endblock %}
+			</main>
+		</body>
+	</html>

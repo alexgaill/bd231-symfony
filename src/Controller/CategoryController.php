@@ -47,6 +47,7 @@ class CategoryController extends AbstractController
     {
         $category = $this->manager->getRepository(Category::class)->find($id);
         if (!$category) {
+            $this->addFlash('danger', "La catégorie que vous recherchez n'existe pas.");
             return $this->redirectToRoute('app_category');
         }
         return $this->render('category/show.html.twig', [
@@ -85,6 +86,7 @@ class CategoryController extends AbstractController
             $om = $this->manager->getManager();
             $om->persist($category);
             $om->flush();
+            $this->addFlash('success', "La catégorie ".$category->getName()." a été ajoutée");
 
             return $this->redirectToRoute('app_category');
         }
@@ -104,6 +106,7 @@ class CategoryController extends AbstractController
     {
         $category = $this->manager->getRepository(Category::class)->find($id);
         if (!$category) {
+            $this->addFlash('danger', "La catégorie que vous recherchez n'existe pas.");
             return $this->redirectToRoute('app_category');
         }
         $form = $this->createForm(CategoryType::class, $category);
@@ -113,7 +116,7 @@ class CategoryController extends AbstractController
             $om = $this->manager->getManager();
             $om->persist($category);
             $om->flush();
-
+            $this->addFlash('success', "La catégorie a bien été modifiée.");
             return $this->redirectToRoute('show_category', ['id' => $category->getId()]);
         }
 
@@ -131,6 +134,9 @@ class CategoryController extends AbstractController
             $om = $this->manager->getManager();
             $om->remove($category);
             $om->flush();
+            $this->addFlash('success', "La catégorie a été supprimée.");
+        } else {
+            $this->addFlash('danger', "La catégorie que vous recherchez n'existe pas.");
         }
 
         return $this->redirectToRoute('app_category');
