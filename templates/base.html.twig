@@ -35,13 +35,25 @@
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="{{ path('app_category') }}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<a class="nav-link dropdown-toggle active" href="{{ path('app_category') }}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 									Catégories
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 									{% for category in categories %}
 									<li>
 										<a class="dropdown-item" href="{{ path('show_category', {id: category.id}) }}">{{ category.name }}</a>
+									</li>
+									{% endfor %}
+								</ul>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle active" href="{{ path('post_app') }}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Articles récents
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+									{% for post in recentPosts %}
+									<li>
+										<a class="dropdown-item" href="{{ path('post_show', {id: post.id}) }}">{{ post.title }}</a>
 									</li>
 									{% endfor %}
 								</ul>

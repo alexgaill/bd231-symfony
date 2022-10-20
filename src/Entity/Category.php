@@ -8,6 +8,7 @@ use App\Repository\CategoryRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Category{
 
     #[ORM\Column(type:'integer')]
@@ -110,5 +111,13 @@ class Category{
         $this->picture = $picture;
 
         return $this;
+    }
+
+    #[ORM\PostRemove]
+    public function deletePicture(): void
+    {
+        if (file_exists(__DIR__."/../../public/assets/img/categories/upload/" . $this->picture)) {
+            unlink(__DIR__."/../../public/assets/img/categories/upload/" . $this->picture);
+        }
     }
 }

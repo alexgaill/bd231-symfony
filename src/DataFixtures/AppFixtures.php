@@ -28,7 +28,7 @@ class AppFixtures extends Fixture
                 $post = new Post;
                 $post->setTitle($faker->words(5, true))
                     ->setContent($faker->paragraphs(4, true))
-                    ->setCreatedAt(new DateTime())
+                    ->setCreatedAt($faker->datetime())
                     ->setCategory($category)
                     ;
                 $manager->persist($post);
