@@ -7,6 +7,7 @@ use App\Form\CategoryType;
 use App\Service\UploadFile;
 // use App\Entity\CategoryRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -59,6 +60,7 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/add', name:'add_category', methods:["GET", "POST"])]
+    #[IsGranted("ROLE_ADMIN", message:"Vous n'avez pas les droits", statusCode:403)]
     public function add(Request $request): Response
     {
         $category = new Category;
@@ -116,6 +118,10 @@ class CategoryController extends AbstractController
     #[Route('/category/{id}/update', name:'update_category', methods:["GET", "POST"], requirements:['id' => "\d+"])]
     public function update(int $id, Request $request): Response
     {
+        if(!$this->isGranted("ROLE_ADMIN")){
+            $this->addFlash('danger', "Vous devez être admin pour pouvoir modifier une catégorie");
+            return $this->redirectToRoute('app_category');
+        }
         $category = $this->manager->getRepository(Category::class)->find($id);
         if (!$category) {
             $this->addFlash('danger', "La catégorie que vous recherchez n'existe pas.");
@@ -151,6 +157,8 @@ class CategoryController extends AbstractController
     #[Route('/category/{id}/delete', name:'delete_category', methods:["GET"], requirements:['id' => "\d+"])]
     public function delete(int $id): Response
     {
+        $this->denyAccessUnlessGranted("ROLE_ADMIN", null, "Vous n'avez pas les droits");
+
         $category = $this->manager->getRepository(Category::class)->find($id);
 
         if ($category) {

@@ -25,9 +25,9 @@
 				<div
 					class="container-fluid">
 					{# 
-										                        path est une fonction de twig générant le chemin vers une méthode de controller.
-										                        path prend en paramètre le nom de la route.
-										                     #}
+						path est une fonction de twig générant le chemin vers une méthode de controller.
+						path prend en paramètre le nom de la route.
+					#}
 					<a class="navbar-brand" href="{{ path('app_home') }}">Superblog</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
@@ -60,14 +60,30 @@
 							</li>
 							<li class="nav-item">
 								<a class="nav-link active" aria-current="page" href="{{ path('post_app') }}">Articles</a>
-							</li>
-							
+							</li>	
+							{# app.user contient les informations de l'utilisateur connecté ou un tableau vide pour un anonyme #}
+							{% if app.user  %}
+								<li class="nav-item">
+									<a class="nav-link active" aria-current="page" href="{{ path('app_logout') }}">Déconnexion</a>
+								</li>
+								{# is_granted vérifie que le rôle de l'utilisateur correspond à celui attendu #}
+								{% if is_granted('ROLE_ADMIN') %}
+								<li class="nav-item">
+									<a class="nav-link active" aria-current="page" href="{{ path('add_category') }}">Ajouter une catégorie</a>
+								</li>
+								{% endif %}
+							{% else %}
+								<li class="nav-item">
+									<a class="nav-link active" aria-current="page" href="{{ path('app_register') }}">Inscription</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link active" aria-current="page" href="{{ path('app_login') }}">Connexion</a>
+								</li>
+							{% endif %}
 						</ul>
 					</div>
 				</div>
 			</nav>
-			<pre>
-			</pre>
 			{% for type, messages in app.flashes %}
 				{% for message in messages %}
 					<div class="alert alert-{{type}} alert-dismissible fade show" role="alert">
