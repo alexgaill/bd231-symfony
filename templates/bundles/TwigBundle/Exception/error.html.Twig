@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>Erreur {{ status_code }}: {{status_text}}</h1>
+
+    <p class="text-danger">{{ exception.message }}</p>
+
+    <p>Cliquez <a href="{{ path('app_home') }}">ici</a> pour retourner à l'accueil</p>
+{% endblock %}
