@@ -25,25 +25,37 @@
 				<div
 					class="container-fluid">
 					{# 
-					                        path est une fonction de twig générant le chemin vers une méthode de controller.
-					                        path prend en paramètre le nom de la route.
-					                     #}
+										                        path est une fonction de twig générant le chemin vers une méthode de controller.
+										                        path prend en paramètre le nom de la route.
+										                     #}
 					<a class="navbar-brand" href="{{ path('app_home') }}">Superblog</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-							<li class="nav-item">
-								<a class="nav-link active" aria-current="page" href="{{ path('app_category') }}">Catégories</a>
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="{{ path('app_category') }}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Catégories
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+									{% for category in categories %}
+									<li>
+										<a class="dropdown-item" href="{{ path('show_category', {id: category.id}) }}">{{ category.name }}</a>
+									</li>
+									{% endfor %}
+								</ul>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="#">Link</a>
+								<a class="nav-link active" aria-current="page" href="{{ path('post_app') }}">Articles</a>
 							</li>
+							
 						</ul>
 					</div>
 				</div>
 			</nav>
+			<pre>
+			</pre>
 			{% for type, messages in app.flashes %}
 				{% for message in messages %}
 					<div class="alert alert-{{type}} alert-dismissible fade show" role="alert">
@@ -54,10 +66,10 @@
 			{% endfor %}
 		</header>
 		{# 
-		            Les block sont utilisés pour définir des points d'intégration de template sur le fichier base.
-		            Vous pouvez en générant autant que vous souhaitez sur ce fichier. 
-		            Mais sur les autres template on ne pourra qu'appeler ceux présents sur base.
-		         #}
+				            Les block sont utilisés pour définir des points d'intégration de template sur le fichier base.
+				            Vous pouvez en générant autant que vous souhaitez sur ce fichier. 
+				            Mais sur les autres template on ne pourra qu'appeler ceux présents sur base.
+				         #}
 		<main class="container"> {% block body %}{% endblock %}
 			</main>
 		</body>

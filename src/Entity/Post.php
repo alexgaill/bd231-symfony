@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Post
 {
     #[ORM\Id]
@@ -109,5 +110,13 @@ class Post
         $this->picture = $picture;
 
         return $this;
+    }
+
+    #[ORM\PostRemove]
+    public function deletePicture(): void
+    {
+        if (file_exists(__DIR__ . "/../../public/assets/img/posts/upload/". $this->picture)) {
+            unlink(__DIR__ . "/../../public/assets/img/posts/upload/". $this->picture);
+        }
     }
 }
