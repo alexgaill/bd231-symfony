@@ -25,9 +25,9 @@
 				<div
 					class="container-fluid">
 					{# 
-						path est une fonction de twig générant le chemin vers une méthode de controller.
-						path prend en paramètre le nom de la route.
-					#}
+											path est une fonction de twig générant le chemin vers une méthode de controller.
+											path prend en paramètre le nom de la route.
+										#}
 					<a class="navbar-brand" href="{{ path('app_home') }}">Superblog</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
@@ -40,9 +40,9 @@
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 									{% for category in categories %}
-									<li>
-										<a class="dropdown-item" href="{{ path('show_category', {id: category.id}) }}">{{ category.name }}</a>
-									</li>
+										<li>
+											<a class="dropdown-item" href="{{ path('show_category', {id: category.id}) }}">{{ category.name }}</a>
+										</li>
 									{% endfor %}
 								</ul>
 							</li>
@@ -52,15 +52,15 @@
 								</a>
 								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 									{% for post in recentPosts %}
-									<li>
-										<a class="dropdown-item" href="{{ path('post_show', {id: post.id}) }}">{{ post.title }}</a>
-									</li>
+										<li>
+											<a class="dropdown-item" href="{{ path('post_show', {id: post.id}) }}">{{ post.title }}</a>
+										</li>
 									{% endfor %}
 								</ul>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link active" aria-current="page" href="{{ path('post_app') }}">Articles</a>
-							</li>	
+							</li>
 							{# app.user contient les informations de l'utilisateur connecté ou un tableau vide pour un anonyme #}
 							{% if app.user  %}
 								<li class="nav-item">
@@ -68,9 +68,9 @@
 								</li>
 								{# is_granted vérifie que le rôle de l'utilisateur correspond à celui attendu #}
 								{% if is_granted('ROLE_ADMIN') %}
-								<li class="nav-item">
-									<a class="nav-link active" aria-current="page" href="{{ path('add_category') }}">Ajouter une catégorie</a>
-								</li>
+									<li class="nav-item">
+										<a class="nav-link active" aria-current="page" href="{{ path('add_category') }}">Ajouter une catégorie</a>
+									</li>
 								{% endif %}
 							{% else %}
 								<li class="nav-item">
@@ -81,6 +81,10 @@
 								</li>
 							{% endif %}
 						</ul>
+						<form class="d-flex" method="GET", action="{{ path('post_search') }}">
+							<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+							<button class="btn btn-outline-success" type="submit">Rechercher</button>
+						</form>
 					</div>
 				</div>
 			</nav>
@@ -94,10 +98,10 @@
 			{% endfor %}
 		</header>
 		{# 
-				            Les block sont utilisés pour définir des points d'intégration de template sur le fichier base.
-				            Vous pouvez en générant autant que vous souhaitez sur ce fichier. 
-				            Mais sur les autres template on ne pourra qu'appeler ceux présents sur base.
-				         #}
+						            Les block sont utilisés pour définir des points d'intégration de template sur le fichier base.
+						            Vous pouvez en générant autant que vous souhaitez sur ce fichier. 
+						            Mais sur les autres template on ne pourra qu'appeler ceux présents sur base.
+						         #}
 		<main class="container"> {% block body %}{% endblock %}
 			</main>
 		</body>

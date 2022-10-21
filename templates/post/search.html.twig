@@ -1,13 +1,19 @@
 {% extends "base.html.twig" %}
 {% block body %}
-    {% if posts %}
-        <ul>
-            {% for post in posts %}
-                <li><a href="{{ path('single_post', {id:post.id}) }}">{{ post.title }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="test-warning">Aucun article ne correspond à la recherche</p>
-    {% endif %}
-    
+	{% if error %}
+		<h2 class="text-danger">Vous ne pouvez pas exécuter une recherche avec le champ vide.</h2>
+	{% else %}
+		{% if posts %}
+			<ul>
+				{% for post in posts %}
+					<li>
+						<a href="{{ path('post_show', {id:post.id}) }}">{{ post.title }}</a>
+					</li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			<p class="test-warning">Aucun article ne correspond à la recherche</p>
+		{% endif %}
+	{% endif %}
+
 {% endblock %}

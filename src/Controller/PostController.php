@@ -142,4 +142,17 @@ class PostController extends AbstractController
         }
         return $this->redirectToRoute(self::REDIRECT);
     }
+
+    #[Route("/search", name:"search", methods:['GET'])]
+    public function search(Request $request): Response
+    {
+        $search = $request->get('search');
+        $error = false;
+        $search ? $posts = $this->repository->search($search) : $error = true;
+
+        return $this->render("post/search.html.twig", [
+            'posts' => $posts ?? null,
+            'error' => $error
+        ]);
+    }
 }

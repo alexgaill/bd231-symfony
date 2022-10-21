@@ -5,11 +5,18 @@ use App\Controller\CategoryController;
 use App\Controller\HomeController;
 use App\Repository\CategoryRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Controller\ErrorController;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Twig\Environment;
 
 class TwigEventSubscriber implements EventSubscriberInterface
 {
+
+    private array $restrictedControllers = [
+        [HomeController::class, 'home'],
+        [CategoryController::class, 'index']
+    ];
+
     public function __construct(
         private CategoryRepository $repository,
         private Environment $twig
@@ -35,14 +42,17 @@ class TwigEventSubscriber implements EventSubscriberInterface
      */
     public function onControllerEvent(ControllerEvent $event)
     {
-        // $restrictedControllers = [
-        //     [HomeController::class, 'home'],
-        //     [CategoryController::class, 'index']
-        // ];
-        
-        // if ($event->getController()[0] instanceof HomeController || $event->getController()[0] instanceof CategoryController) {
-        //     return;
-        // }
+        $controller = $event->getController();
+        // dd($event->getController());
+        if ($event->getController() instanceof ErrorController) {
+            return;
+        }
+        $controller[0] = $controller[0]::class;
+
+        if (in_array($controller, $this->restrictedControllers)) {
+            return;
+        }
+
         $categories = $this->repository->findAll();
         $this->twig->addGlobal('categories', $categories);
     }
